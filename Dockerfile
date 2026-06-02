@@ -24,8 +24,10 @@ WORKDIR /var/www/html
 # Copy composer files first for better caching
 COPY composer.json composer.lock ./
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+# Install dependencies (--ignore-platform-reqs for dev-master packages)
+RUN composer config minimum-stability dev && \
+    composer config prefer-stable true && \
+    composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --ignore-platform-reqs
 
 # Copy application files
 COPY . /var/www/html
